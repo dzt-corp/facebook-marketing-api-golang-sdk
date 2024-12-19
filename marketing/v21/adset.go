@@ -185,7 +185,7 @@ type Adset struct {
 	DestinationType            string                 `json:"destination_type,omitempty"`
 	DeliveryEstimate           *DeliveryEstimate      `json:"delivery_estimate,omitempty"`
 	EffectiveStatus            string                 `json:"effective_status,omitempty"`
-	EndTime                    fb.Time                `json:"end_time,omitempty"`
+	EndTime                    *fb.Time               `json:"end_time,omitempty"`
 	FrequencyControlSpecs      []FrequencyControlSpec `json:"frequency_control_specs,omitempty"`
 	ID                         string                 `json:"id,omitempty"`
 	LifetimeBudget             float64                `json:"lifetime_budget,omitempty,string"`
