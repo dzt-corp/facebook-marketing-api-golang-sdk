@@ -14,7 +14,7 @@ type AdAccountService struct {
 // List lists all ad accounts that belong to this business.
 func (aas *AdAccountService) List(ctx context.Context, businessID string) ([]AdAccount, error) {
 	res := []AdAccount{}
-	rb := fb.NewRoute(Version, "/%s/owned_ad_accounts", businessID).Limit(1000).Fields("name", "currency", "account_id", "timezone_name")
+	rb := fb.NewRoute(Version, "/%s/owned_ad_accounts", businessID).Limit(1000).Fields("name", "currency", "account_id", "timezone_name", "account_status", "amount_spent", "balance")
 	err := aas.c.GetList(ctx, rb.String(), &res)
 	if err != nil {
 		return nil, err
@@ -25,8 +25,11 @@ func (aas *AdAccountService) List(ctx context.Context, businessID string) ([]AdA
 
 // AdAccount represents an ad account.
 type AdAccount struct {
-	Name         string `json:"name"`
-	AccountID    string `json:"account_id"`
-	Currency     string `json:"currency"`
-	TimeZoneName string `json:"timezone_name"`
+	Name          string `json:"name"`
+	AccountID     string `json:"account_id"`
+	Currency      string `json:"currency"`
+	TimeZoneName  string `json:"timezone_name"`
+	AccountStatus int    `json:"account_status"`
+	AmountSpent   string `json:"amount_spent"`
+	Balance       string `json:"balance"`
 }
