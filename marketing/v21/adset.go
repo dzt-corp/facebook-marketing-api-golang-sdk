@@ -160,11 +160,12 @@ var AdsetFields = []string{
 	"lifetime_imps", "lifetime_min_spend_target", "lifetime_spend_cap",
 	"name", "budget_remaining", "optimization_goal", "adset_schedule",
 	"adlabels", "recurring_budget_semantics",
-	"rf_prediction_id", "source_adset_id", "start_time", "targeting",
+	"rf_prediction_id", "source_adset_id", "start_time", // "targeting",
 	"time_based_ad_rotation_id_blocks", "time_based_ad_rotation_intervals",
 	"pacing_type", "promoted_object", "recommendations",
 	"source_adset", "status", "updated_time", "use_new_app_click",
 	"campaign{name,objective,effective_status}", "dsa_beneficiary", "dsa_payor",
+	"targeting{geo_locations,keywords,genders,age_min,age_max,relationship_statuses,countries,locales,device_platforms,effective_device_platforms,publisher_platforms,effective_publisher_platforms,facebook_positions,effective_facebook_positions,instagram_positions,effective_instagram_positions,audience_network_positions,effective_audience_network_positions,messenger_positions,effective_messenger_positions,education_statuses,user_adclusters,excluded_geo_locations,interested_in,interests,behaviors,connections,excluded_connections,friends_of_connections,user_os,user_device,excluded_user_device,app_install_state,wireless_carrier,site_category,college_years,work_employers,work_positions,education_majors,life_events,politics,income,home_type,home_value,ethnic_affinity,generation,household_composition,moms,office_type,family_statuses,net_worth,home_ownership,industries,education_schools,custom_audiences,excluded_custom_audiences,dynamic_audience_ids,product_audience_specs,excluded_product_audience_specs,flexible_spec,exclusions,excluded_publisher_categories,excluded_publisher_list_ids,place_page_set_ids,targeting_optimization,brand_safety_content_filter_levels,is_whatsapp_destination_ad,instream_video_skippable_excluded,targeting_relaxation_types}",
 }
 
 // Adset from https://developers.facebook.com/docs/marketing-api/reference/ad-campaign
@@ -197,7 +198,7 @@ type Adset struct {
 	PacingType                 []string               `json:"pacing_type,omitempty"`
 	PromotedObject             *PromotedObject        `json:"promoted_object,omitempty"`
 	RecurringBudgetSemantics   bool                   `json:"recurring_budget_semantics,omitempty"`
-	StartTime                  fb.Time                `json:"start_time,omitempty"`
+	StartTime                  *fb.Time               `json:"start_time,omitempty"`
 	Status                     string                 `json:"status,omitempty"`
 	Targeting                  *Targeting             `json:"targeting,omitempty"`
 	UpdatedTime                fb.Time                `json:"updated_time,omitempty"`
