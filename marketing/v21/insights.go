@@ -61,6 +61,17 @@ func (ir *InsightsRequest) Download(ctx context.Context) ([]Insight, error) {
 	return res, nil
 }
 
+// Download returns all insights from the request in one slice.
+func (ir *InsightsRequest) DownloadV2(ctx context.Context) ([]byte, error) {
+	var res []byte
+	err := ir.c.GetList(ctx, ir.RouteBuilder.String(), &res)
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
+
 // GenerateReport creates the insights report, waits until it's finished building, reads to c and then deletes it.
 func (ir *InsightsRequest) GenerateReport(ctx context.Context, c chan<- Insight) (uint64, error) {
 	run := &struct {
