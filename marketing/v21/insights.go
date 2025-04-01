@@ -197,6 +197,8 @@ type Insight struct {
 	Region                           string                 `json:"region"`
 	Country                          string                 `json:"country"`
 	Ctr                              string                 `json:"ctr"`
+	Cpc                              string                 `json:"cpc"`
+	Cpm                              string                 `json:"cpm"`
 	InlineLinkClicks                 string                 `json:"inline_link_clicks"`
 }
 
