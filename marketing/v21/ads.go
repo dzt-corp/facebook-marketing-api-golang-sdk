@@ -75,7 +75,7 @@ func (as *AdService) Update(ctx context.Context, a Ad) error {
 // List returns all ads of an account.
 func (as *AdService) List(act string) *AdListCall {
 	return &AdListCall{
-		RouteBuilder: fb.NewRoute(Version, "/act_%s/ads", act).Fields("adset_id", "creative", "id", "name", "account_id", "adset{id}", "adcreatives{id}").Limit(1000),
+		RouteBuilder: fb.NewRoute(Version, "/act_%s/ads", act).Fields("adset_id", "creative", "id", "name", "account_id", "adset{id}", "adcreatives{id}", "created_time").Limit(1000),
 		c:            as.c,
 	}
 }
@@ -139,6 +139,7 @@ type Ad struct {
 	AdsetID       string                  `json:"adset_id,omitempty"`
 	Creative      *AdCreative             `json:"creative,omitempty"`
 	Adset         *Adset                  `json:"adset,omitempty"`
+	CreatedTime   fb.Time                 `json:"created_time,omitempty"`
 	TrackingSpecs []ConversionActionQuery `json:"tracking_specs,omitempty"`
 	Adcreatives   *struct {
 		Data []AdCreative `json:"data,omitempty"`
