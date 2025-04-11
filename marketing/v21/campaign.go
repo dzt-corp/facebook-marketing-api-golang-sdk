@@ -156,7 +156,7 @@ type Campaign struct {
 	BidAmount           uint64   `json:"bid_amount,omitempty"`
 	CanUseSpendCap      bool     `json:"can_use_spend_cap,omitempty"`
 	ConfiguredStatus    string   `json:"configured_status,omitempty"`
-	CreatedTime         string   `json:"created_time,omitempty"`
+	CreatedTime         fb.Time  `json:"created_time,omitempty"`
 	DailyBudget         uint64   `json:"daily_budget,omitempty,string"`
 	EffectiveStatus     string   `json:"effective_status,omitempty"`
 	ID                  string   `json:"id,omitempty"`
