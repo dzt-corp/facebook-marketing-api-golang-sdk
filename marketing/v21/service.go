@@ -9,7 +9,7 @@ import (
 )
 
 // Version of the graph API being used.
-const Version = "v16.0"
+const Version = "v21.0"
 
 // Service interacts with the Facebook Marketing API.
 type Service struct {
@@ -34,10 +34,10 @@ type Service struct {
 // New initializes a new Service and all the Services contained.
 func New(l log.Logger, accessToken, appSecret string) (*Service, error) {
 	c := fb.NewClient(l, accessToken, appSecret)
-	err := c.GetJSON(context.Background(), fb.NewRoute(Version, "/me").String(), &struct{}{})
+	/* err := c.GetJSON(context.Background(), fb.NewRoute(Version, "/me").String(), &struct{}{})
 	if err != nil {
 		return nil, err
-	}
+	} */
 
 	return &Service{
 		Client:            c,
