@@ -72,6 +72,20 @@ func (vs *VideoService) Upload(ctx context.Context, act, title string, size int6
 	return vs.Get(ctx, res.VideoID)
 }
 
+// Thumbnails returns a list of thumbnails for a given video.
+func (vs *VideoService) Thumbnails(ctx context.Context, id string) ([]VideoThumbnail, error) {
+	var res VideoThumbnailsResponse
+	err := vs.c.GetJSON(ctx, fb.NewRoute(Version, "/%s/thumbnails", id).Filter("is_preferred=true").Fields(thumbnailFields...).String(), &res)
+	if err != nil {
+		if fb.IsNotFound(err) {
+			return nil, nil
+		}
+		return nil, err
+	}
+
+	return res.Data, nil
+}
+
 // ReadList returns all videos from an account and writes them to a channel.
 func (vs *VideoService) ReadList(ctx context.Context, act string, res chan<- Video) error {
 	jres := make(chan json.RawMessage)
@@ -98,6 +112,7 @@ func (vs *VideoService) ReadList(ctx context.Context, act string, res chan<- Vid
 }
 
 var advideoFields = []string{"title", "id", "picture", "description", "from", "format", "length", "status"}
+var thumbnailFields = []string{"id", "height", "is_preferred", "name", "scale", "uri", "width"}
 
 type uploadVideoRequestStart struct {
 	UploadPhase string `json:"upload_phase"`
@@ -174,4 +189,28 @@ type Video struct {
 	Status struct {
 		VideoStatus string `json:"video_status"`
 	} `json:"status"`
+}
+
+type VideoThumbnailsResponse struct {
+	Data   []VideoThumbnail `json:"data"`
+	Paging PagingInfo       `json:"paging"`
+}
+
+type PagingInfo struct {
+	Cursors PagingCursors `json:"cursors"`
+}
+
+type PagingCursors struct {
+	Before string `json:"before"`
+	After  string `json:"after"`
+}
+
+type VideoThumbnail struct {
+	ID          string `json:"id"`                     // Unique ID of the thumbnail object
+	IsPreferred bool   `json:"is_preferred"`           // Whether it's the preferred thumbnail
+	Height      int    `json:"height,omitempty"`       // Height of the thumbnail in pixels (may be present)
+	Width       int    `json:"width,omitempty"`        // Width of the thumbnail in pixels (may be present)
+	Scale       int    `json:"scale,omitempty"`        // Scale of the image (may be present)
+	URI         string `json:"uri"`                    // Direct link to the thumbnail image
+	CreatedTime string `json:"created_time,omitempty"` // ISO 8601 format (if available)
 }
