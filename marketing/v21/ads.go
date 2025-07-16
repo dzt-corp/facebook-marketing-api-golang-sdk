@@ -20,7 +20,7 @@ func (as *AdService) Get(ctx context.Context, id string) (*Ad, error) {
 	res := &Ad{}
 	err := as.c.GetJSON(ctx, fb.NewRoute(Version, "/%s", id).Fields("id", "creative", "name", "account_id", "adset_id", "created_time", "status",
 		"adset{id,campaign_id,daily_budget,name,start_time,end_time,created_time,status,bid_strategy,targeting{age_min,age_max,publisher_platforms,geo_locations,genders,custom_audiences,excluded_custom_audiences,flexible_spec,exclusions}}",
-		"adcreatives{id,title,object_story_spec}").Limit(1000).String(), res)
+		"adcreatives{id,title,object_story_spec,object_type,video_id}").Limit(1000).String(), res)
 	if err != nil {
 		if fb.IsNotFound(err) {
 			return nil, nil
@@ -75,7 +75,7 @@ func (as *AdService) Update(ctx context.Context, a Ad) error {
 // List returns all ads of an account.
 func (as *AdService) List(act string) *AdListCall {
 	return &AdListCall{
-		RouteBuilder: fb.NewRoute(Version, "/act_%s/ads", act).Fields("adset_id", "creative", "id", "name", "account_id", "adset{id}", "adcreatives{id,object_type,video_id}", "created_time").Limit(1000),
+		RouteBuilder: fb.NewRoute(Version, "/act_%s/ads", act).Fields("adset_id", "creative", "id", "name", "account_id", "adset{id}", "adcreatives{id}", "created_time").Limit(1000),
 		c:            as.c,
 	}
 }
