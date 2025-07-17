@@ -36,6 +36,14 @@ func (is *InsightsService) NewReport(account string) *InsightsRequest {
 	}
 }
 
+// NewReport creates a new InsightsRequest.
+func (is *InsightsService) NewVideoReport(campaignID string) *InsightsRequest {
+	return &InsightsRequest{
+		InsightsService: is,
+		RouteBuilder:    fb.NewRoute(Version, "/%s/video_insights", campaignID),
+	}
+}
+
 // NewReportOfCampaign creates a new InsightsRequest.
 func (is *InsightsService) NewReportOfCampaign(campaignID string) *InsightsRequest {
 	return &InsightsRequest{
@@ -192,6 +200,7 @@ type Insight struct {
 	VideoP75WatchedActions           ActionTypeValue        `json:"video_p75_watched_actions"`
 	VideoP95WatchedActions           ActionTypeValue        `json:"video_p95_watched_actions"`
 	VideoPlayActions                 ActionTypeValue        `json:"video_play_actions"`
+	VideoPlayCurveActions            ActionTypeCurveValue   `json:"video_play_curve_actions"`
 	InteractiveComponentTap          []InteractiveComponent `json:"interactive_component_tap"`
 	DeviceType                       string                 `json:"impression_device"`
 	Region                           string                 `json:"region"`
@@ -238,6 +247,11 @@ type ActionTypeValue []struct {
 	Click1d  float64 `json:"1d_click,string"`
 	Click7d  float64 `json:"7d_click,string"`
 	Click28d float64 `json:"28d_click,string"`
+}
+
+type ActionTypeCurveValue []struct {
+	ActionType string `json:"action_type"`
+	Value      []int  `json:"value"`
 }
 
 // GetValue returns the sum of the values with the given action type.
