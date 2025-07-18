@@ -174,6 +174,7 @@ type Insight struct {
 	Actions                          ActionTypeValue        `json:"actions"`
 	AdsetID                          string                 `json:"adset_id"`
 	AdID                             string                 `json:"ad_id"`
+	AdName                           string                 `json:"ad_name"`
 	Objective                        string                 `json:"objective"`
 	AdsetName                        string                 `json:"adset_name"`
 	Age                              string                 `json:"age"`
