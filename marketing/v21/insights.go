@@ -164,6 +164,7 @@ func (ir *InsightsRequest) GenerateReport(ctx context.Context, c chan<- Insight)
 type Insight struct {
 	AccountID                        string                 `json:"account_id"`
 	Actions                          ActionTypeValue        `json:"actions"`
+	ActionValues                     ActionTypeValue        `json:"action_values"`
 	AdsetID                          string                 `json:"adset_id"`
 	AdID                             string                 `json:"ad_id"`
 	Objective                        string                 `json:"objective"`
