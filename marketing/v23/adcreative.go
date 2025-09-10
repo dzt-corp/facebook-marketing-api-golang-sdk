@@ -46,15 +46,15 @@ func (as *AdCreativeService) Create(ctx context.Context, a AdCreative) (string, 
 	}
 
 	// The enroll_status parameter for Standard Enhancements is now required for eligible ad creation requests.
-	if a.DegreesOfFreedomSpec == nil || a.DegreesOfFreedomSpec.CreativeFeaturesSpec.StandardEnhancements.EnrollStatus == "" {
-		a.DegreesOfFreedomSpec = &DegreesOfFreedomSpec{
-			CreativeFeaturesSpec: CreativeFeaturesSpec{
-				StandardEnhancements: StandardEnhancements{
-					EnrollStatus: "OPT_OUT",
-				},
-			},
-		}
-	}
+	// if a.DegreesOfFreedomSpec == nil || a.DegreesOfFreedomSpec.CreativeFeaturesSpec.StandardEnhancements.EnrollStatus == "" {
+	// 	a.DegreesOfFreedomSpec = &DegreesOfFreedomSpec{
+	// 		CreativeFeaturesSpec: CreativeFeaturesSpec{
+	// 			StandardEnhancements: StandardEnhancements{
+	// 				EnrollStatus: "OPT_OUT",
+	// 			},
+	// 		},
+	// 	}
+	// }
 
 	res := struct {
 		fb.ID
