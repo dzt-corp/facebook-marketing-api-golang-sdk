@@ -202,7 +202,7 @@ type AdCreative struct {
 	// A URL for the image for this creative. We save the image at this URL to the ad account's image library. If provided do not include image_hash.
 	ImageURL string `json:"image_url,omitempty"`
 	// Instagram actor ID
-	InstagramActorID string `json:"instagram_user_id,omitempty"`
+	InstagramUserID string `json:"instagram_user_id,omitempty"`
 	// Instagram permalink
 	InstagramPermalinkURL string `json:"instagram_permalink_url,omitempty"`
 	// The ID of an Instagram post for creating ads.
@@ -309,11 +309,11 @@ func (ac AdCreative) GetLinkCaption() string {
 
 // ObjectStorySpec contains the media of a creative.
 type ObjectStorySpec struct {
-	PageID           string               `json:"page_id,omitempty"`
-	InstagramActorID string               `json:"instagram_user_id,omitempty"`
-	VideoData        *VideoData           `json:"video_data,omitempty"`
-	LinkData         *AdCreativeLinkData  `json:"link_data,omitempty"`
-	PhotoData        *AdCreativePhotoData `json:"photo_data,omitempty"`
+	PageID          string               `json:"page_id,omitempty"`
+	InstagramUserID string               `json:"instagram_user_id,omitempty"`
+	VideoData       *VideoData           `json:"video_data,omitempty"`
+	LinkData        *AdCreativeLinkData  `json:"link_data,omitempty"`
+	PhotoData       *AdCreativePhotoData `json:"photo_data,omitempty"`
 }
 
 type DegreesOfFreedomSpec struct {

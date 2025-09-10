@@ -156,13 +156,13 @@ var Adcreativefields = []string{
 	"account_id",
 	"body", // The body of the ad. Not supported for video post creatives.
 	"call_to_action_type",
-	"effective_instagram_story_id",
+	"effective_instagram_media_id",
 	"effective_object_story_id",
 	"image_hash",
 	"image_url",
 	"instagram_user_id",
 	"instagram_permalink_url",
-	"instagram_story_id",
+	"source_instagram_media_id",
 	"link_og_id",
 	"link_url",
 	"name",
@@ -194,7 +194,7 @@ type AdCreative struct {
 
 	CallToActionType string `json:"call_to_action_type,omitempty"`
 	// The ID of an Instagram post to use in an ad.
-	EffectiveInstagramStoryID string `json:"effective_instagram_story_id,omitempty"`
+	EffectiveInstagramMediaID string `json:"effective_instagram_media_id,omitempty"`
 	// The ID of a page post to use in an ad, regardless of whether it's an organic or unpublished page post.
 	EffectiveObjectStoryID string `json:"effective_object_story_id,omitempty"`
 	// Image hash for an image you can use in creatives. If provided do not provide image_url. See image library for more details
@@ -202,11 +202,11 @@ type AdCreative struct {
 	// A URL for the image for this creative. We save the image at this URL to the ad account's image library. If provided do not include image_hash.
 	ImageURL string `json:"image_url,omitempty"`
 	// Instagram actor ID
-	InstagramActorID string `json:"instagram_user_id,omitempty"`
+	InstagramUserID string `json:"instagram_user_id,omitempty"`
 	// Instagram permalink
 	InstagramPermalinkURL string `json:"instagram_permalink_url,omitempty"`
 	// The ID of an Instagram post for creating ads.
-	InstagramStoryID string `json:"instagram_story_id,omitempty"`
+	SourceInstagramMediaID string `json:"source_instagram_media_id,omitempty"`
 	// Used for creating video polls
 	InteractiveComponentsSpec *InteractiveComponentsSpec `json:"interactive_components_spec,omitempty"`
 	// The Open Graph (OG) ID for the link in this creative if the landing page has OG tags
@@ -309,11 +309,11 @@ func (ac AdCreative) GetLinkCaption() string {
 
 // ObjectStorySpec contains the media of a creative.
 type ObjectStorySpec struct {
-	PageID           string               `json:"page_id,omitempty"`
-	InstagramActorID string               `json:"instagram_user_id,omitempty"`
-	VideoData        *VideoData           `json:"video_data,omitempty"`
-	LinkData         *AdCreativeLinkData  `json:"link_data,omitempty"`
-	PhotoData        *AdCreativePhotoData `json:"photo_data,omitempty"`
+	PageID          string               `json:"page_id,omitempty"`
+	InstagramUserID string               `json:"instagram_user_id,omitempty"`
+	VideoData       *VideoData           `json:"video_data,omitempty"`
+	LinkData        *AdCreativeLinkData  `json:"link_data,omitempty"`
+	PhotoData       *AdCreativePhotoData `json:"photo_data,omitempty"`
 }
 
 type DegreesOfFreedomSpec struct {

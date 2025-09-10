@@ -206,26 +206,6 @@ type Adset struct {
 	DSABeneficiary              string                 `json:"dsa_beneficiary,omitempty"`
 	DSAPayor                    string                 `json:"dsa_payor,omitempty"`
 	RegionalRegulatedCategories []string               `json:"regional_regulated_categories,omitempty"`
-
-	TargetingAutomation TargetingAutomation `json:"targeting_automation,omitempty"`
-}
-
-type TargetingAutomation struct {
-	AdvantageAudience int                `json:"advantage_audience,omitempty"`
-	IndividualSetting *IndividualSetting `json:"individual_setting,omitempty"`
-}
-
-// Reach People Interested in Selected Cities and Regions
-/*
-This feature expands upon our existing location targeting feature, by enabling advertisers to reach people who have shown intent to travel to,
-make purchases in, or general interest in the cities and regions you've selected, within the same country.
-- To opt in, set the geo parameter under individual_setting in targeting_automation to 1.
-- To opt out, set the geo parameter under individual_setting in targeting_automation to 0.
-*/
-type IndividualSetting struct {
-	Geo    *int `json:"geo,omitempty"`
-	Age    *int `json:"age,omitempty"`
-	Gender *int `json:"gender,omitempty"`
 }
 
 // FrequencyControlSpec controls the frequency of an adset.
@@ -275,6 +255,26 @@ type Targeting struct {
 	UserOs                      []string                 `json:"user_os,omitempty"`
 	WirelessCarrier             []string                 `json:"wireless_carrier,omitempty"`
 	TargetingRelaxationTypes    TargetingRelaxationTypes `json:"targeting_relaxation_types,omitempty"`
+
+	TargetingAutomation TargetingAutomation `json:"targeting_automation,omitempty"`
+}
+
+type TargetingAutomation struct {
+	AdvantageAudience int                `json:"advantage_audience"`
+	IndividualSetting *IndividualSetting `json:"individual_setting,omitempty"`
+}
+
+// Reach People Interested in Selected Cities and Regions
+/*
+This feature expands upon our existing location targeting feature, by enabling advertisers to reach people who have shown intent to travel to,
+make purchases in, or general interest in the cities and regions you've selected, within the same country.
+- To opt in, set the geo parameter under individual_setting in targeting_automation to 1.
+- To opt out, set the geo parameter under individual_setting in targeting_automation to 0.
+*/
+type IndividualSetting struct {
+	Geo    *int `json:"geo,omitempty"`
+	Age    *int `json:"age,omitempty"`
+	Gender *int `json:"gender,omitempty"`
 }
 
 // Advantage custom audience and Advantage lookalike can be enabled or disabled.
