@@ -156,7 +156,7 @@ var AdsetFields = []string{
 	"daily_budget", "destination_type", "effective_status",
 	"daily_spend_cap", "daily_min_spend_target", "end_time",
 	"creative_sequence", "frequency_control_specs", "id",
-	"configured_status", "instagram_actor_id", "lifetime_budget",
+	"configured_status", "instagram_user_id", "lifetime_budget",
 	"lifetime_imps", "lifetime_min_spend_target", "lifetime_spend_cap",
 	"name", "budget_remaining", "optimization_goal", "adset_schedule",
 	"adlabels", "recurring_budget_semantics",
@@ -165,7 +165,7 @@ var AdsetFields = []string{
 	"pacing_type", "promoted_object", "recommendations",
 	"source_adset", "status", "updated_time", "use_new_app_click",
 	"campaign{name,objective,effective_status}", "dsa_beneficiary", "dsa_payor",
-	"targeting{geo_locations,keywords,genders,age_min,age_max,relationship_statuses,countries,locales,device_platforms,effective_device_platforms,publisher_platforms,effective_publisher_platforms,facebook_positions,effective_facebook_positions,instagram_positions,effective_instagram_positions,audience_network_positions,effective_audience_network_positions,messenger_positions,effective_messenger_positions,education_statuses,user_adclusters,excluded_geo_locations,interested_in,interests,behaviors,connections,excluded_connections,friends_of_connections,user_os,user_device,excluded_user_device,app_install_state,wireless_carrier,site_category,college_years,work_employers,work_positions,education_majors,life_events,politics,income,home_type,home_value,ethnic_affinity,generation,household_composition,moms,office_type,family_statuses,net_worth,home_ownership,industries,education_schools,custom_audiences,excluded_custom_audiences,dynamic_audience_ids,product_audience_specs,excluded_product_audience_specs,flexible_spec,exclusions,excluded_publisher_categories,excluded_publisher_list_ids,place_page_set_ids,targeting_optimization,brand_safety_content_filter_levels,is_whatsapp_destination_ad,instream_video_skippable_excluded,targeting_relaxation_types}",
+	"targeting{geo_locations,keywords,genders,age_min,age_max,relationship_statuses,countries,locales,device_platforms,effective_device_platforms,publisher_platforms,effective_publisher_platforms,facebook_positions,effective_facebook_positions,instagram_positions,effective_instagram_positions,audience_network_positions,effective_audience_network_positions,messenger_positions,effective_messenger_positions,education_statuses,user_adclusters,excluded_geo_locations,interested_in,interests,behaviors,connections,excluded_connections,friends_of_connections,user_os,user_device,excluded_user_device,app_install_state,wireless_carrier,site_category,college_years,work_employers,work_positions,education_majors,life_events,politics,income,home_type,home_value,ethnic_affinity,generation,household_composition,moms,office_type,family_statuses,net_worth,home_ownership,industries,education_schools,custom_audiences,excluded_custom_audiences,dynamic_audience_ids,product_audience_specs,excluded_product_audience_specs,flexible_spec,exclusions,excluded_publisher_categories,excluded_publisher_list_ids,place_page_set_ids,targeting_optimization,brand_safety_content_filter_levels,is_whatsapp_destination_ad,instream_video_skippable_excluded,targeting_relaxation_types,targeting_automation}",
 }
 
 // Adset from https://developers.facebook.com/docs/marketing-api/reference/ad-campaign
@@ -206,6 +206,26 @@ type Adset struct {
 	DSABeneficiary              string                 `json:"dsa_beneficiary,omitempty"`
 	DSAPayor                    string                 `json:"dsa_payor,omitempty"`
 	RegionalRegulatedCategories []string               `json:"regional_regulated_categories,omitempty"`
+
+	TargetingAutomation TargetingAutomation `json:"targeting_automation,omitempty"`
+}
+
+type TargetingAutomation struct {
+	AdvantageAudience int                `json:"advantage_audience,omitempty"`
+	IndividualSetting *IndividualSetting `json:"individual_setting,omitempty"`
+}
+
+// Reach People Interested in Selected Cities and Regions
+/*
+This feature expands upon our existing location targeting feature, by enabling advertisers to reach people who have shown intent to travel to,
+make purchases in, or general interest in the cities and regions you've selected, within the same country.
+- To opt in, set the geo parameter under individual_setting in targeting_automation to 1.
+- To opt out, set the geo parameter under individual_setting in targeting_automation to 0.
+*/
+type IndividualSetting struct {
+	Geo    *int `json:"geo,omitempty"`
+	Age    *int `json:"age,omitempty"`
+	Gender *int `json:"gender,omitempty"`
 }
 
 // FrequencyControlSpec controls the frequency of an adset.
