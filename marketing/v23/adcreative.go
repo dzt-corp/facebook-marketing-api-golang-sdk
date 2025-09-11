@@ -268,6 +268,8 @@ type AdCreative struct {
 	TemplateURLSpec json.RawMessage `json:"template_url_spec,omitempty"`
 	// Ad Labels that are associated with this creative
 	Adlabels []json.RawMessage `json:"adlabels,omitempty"`
+	//enable_standard_enhancements
+	EnableStandardEnhancements bool `json:"enable_standard_enhancements,omitempty"`
 	// DegreesOfFreedomSpec Specifies the types of transformations that are enabled for the given creative. For more information, see Ad Creative Degrees Of Freedom Spec, Reference.
 	DegreesOfFreedomSpec *DegreesOfFreedomSpec `json:"degrees_of_freedom_spec,omitempty"`
 }
@@ -342,6 +344,7 @@ type CreativeFeaturesSpec struct {
 	DescriptionAutomation   *StandardEnhancements `json:"description_automation,omitempty"`
 	AddTextOverlay          *StandardEnhancements `json:"add_text_overlay,omitempty"`
 	CreativeStickers        *StandardEnhancements `json:"creative_stickers,omitempty"`
+	TextTranslation         *StandardEnhancements `json:"text_translation,omitempty"`
 }
 
 // InteractiveComponentsSpec is mainly used for Video Poll Ads.
