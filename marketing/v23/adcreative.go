@@ -176,6 +176,7 @@ var Adcreativefields = []string{
 	"thumbnail_url",
 	"title",
 	"video_id",
+	"degrees_of_freedom_spec",
 }
 
 // AdCreative https://developers.facebook.com/docs/marketing-api/reference/ad-creative
@@ -322,8 +323,25 @@ type DegreesOfFreedomSpec struct {
 type StandardEnhancements struct {
 	EnrollStatus string `json:"enroll_status"`
 }
+
+// CreativeFeaturesSpec represents Advantage+ Creative feature enrollments.
+// Refer : https://developers.facebook.com/docs/marketing-api/creative/advantage-creative/get-started#features
 type CreativeFeaturesSpec struct {
-	StandardEnhancements StandardEnhancements `json:"standard_enhancements"`
+	InlineComment           *StandardEnhancements `json:"inline_comment,omitempty"`
+	ImageTemplates          *StandardEnhancements `json:"image_templates,omitempty"`
+	ImageTouchups           *StandardEnhancements `json:"image_touchups,omitempty"`
+	VideoAutoCrop           *StandardEnhancements `json:"video_auto_crop,omitempty"`
+	ImageBrightnessContrast *StandardEnhancements `json:"image_brightness_and_contrast,omitempty"`
+	EnhanceCTA              *StandardEnhancements `json:"enhance_cta,omitempty"`
+	TextOptimizations       *StandardEnhancements `json:"text_optimizations,omitempty"`
+	ImageBackgroundGen      *StandardEnhancements `json:"image_background_gen,omitempty"`
+	ImageUncrop             *StandardEnhancements `json:"image_uncrop,omitempty"`
+	AdaptToPlacement        *StandardEnhancements `json:"adapt_to_placement,omitempty"`
+	MediaTypeAutomation     *StandardEnhancements `json:"media_type_automation,omitempty"`
+	ProductExtensions       *StandardEnhancements `json:"product_extensions,omitempty"`
+	DescriptionAutomation   *StandardEnhancements `json:"description_automation,omitempty"`
+	AddTextOverlay          *StandardEnhancements `json:"add_text_overlay,omitempty"`
+	CreativeStickers        *StandardEnhancements `json:"creative_stickers,omitempty"`
 }
 
 // InteractiveComponentsSpec is mainly used for Video Poll Ads.
