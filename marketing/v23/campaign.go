@@ -54,13 +54,13 @@ func (cs *CampaignService) Create(ctx context.Context, c Campaign) (string, erro
 }
 
 // Update updates an campaign.
-func (cs *CampaignService) Update(ctx context.Context, c Campaign) error {
-	if c.ID == "" {
+func (cs *CampaignService) Update(ctx context.Context, fbCampaignID string, data interface{}) error {
+	if fbCampaignID == "" {
 		return errors.New("cannot update a campaign without id")
 	}
 
 	res := &fb.MinimalResponse{}
-	err := cs.c.PostJSON(ctx, fb.NewRoute(Version, "/%s", c.ID).String(), c, res)
+	err := cs.c.PostJSON(ctx, fb.NewRoute(Version, "/%s", fbCampaignID).String(), data, res)
 	if err != nil {
 		return err
 	} else if err = res.GetError(); err != nil {
