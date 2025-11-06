@@ -88,7 +88,7 @@ func (c *Client) handleResponse(resp *http.Response, res interface{}, req []byte
 		return fmt.Errorf("unexpected status %s", resp.Status)
 	}
 
-	return json.Unmarshal(buf.Bytes(), res)
+	return json.Unmarshal(body, res)
 }
 
 func (c *Client) handleError(err error, res *http.Response, req []byte) {
