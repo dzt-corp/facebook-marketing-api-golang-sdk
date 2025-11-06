@@ -119,7 +119,14 @@ func (cs *CampaignService) Update(ctx context.Context, c Campaign) error {
 
 // List creates a new CampaignListCall.
 func (cs *CampaignService) List(act string) *CampaignListCall {
-	return cs.ListByEffectiveStatus(act, DefaultEffectiveStatuses...)
+	return &CampaignListCall{
+		RouteBuilder: fb.NewRoute(Version, "/act_%s/campaigns", act).Fields(campaignFieldsShort...).Limit(1000).Filtering(fb.Filter{
+			Field:    "effective_status",
+			Operator: "IN",
+			Value:    []string{"ACTIVE", "PAUSED", "DELETED", "PENDING_REVIEW", "DISAPPROVED", "PREAPPROVED", "PENDING_BILLING_INFO", "CAMPAIGN_PAUSED", "ARCHIVED", "ADSET_PAUSED"},
+		}),
+		c: cs.c,
+	}
 }
 
 // ListByEffectiveStatus returns a CampaignListCall filtered by the given
