@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"sync/atomic"
 	"time"
 
 	"github.com/cenk/backoff"
@@ -17,10 +18,14 @@ import (
 	"github.com/go-kit/kit/log/level"
 )
 
+var GlobalProofDisabled atomic.Bool
+
 // Client holds an http.Client and provides additional functionality.
 type Client struct {
 	l log.Logger
 	*http.Client
+	lastSwitch    time.Time
+	ProofDisabled bool
 }
 
 // NewClient returns a http.Client containing a special transport with injects the version, token, and clientkey.
@@ -35,6 +40,34 @@ func NewClient(l log.Logger, token, clientKey string) *Client {
 	}
 }
 
+func (c *Client) disableProofTemporarily() {
+	if c.ProofDisabled && time.Since(c.lastSwitch) < 30*time.Second {
+		return // tránh spam toggle liên tục
+	}
+	GlobalProofDisabled.Store(true)
+	c.ProofDisabled = true
+	c.lastSwitch = time.Now()
+	_ = level.Warn(c.l).Log("msg", "[fb-sdk] 🔕 Disabled AppSecretProof temporarily", "until", time.Now().Add(3*time.Minute))
+
+	go func() {
+		time.Sleep(3 * time.Minute)
+		GlobalProofDisabled.Store(true)
+		c.ProofDisabled = false
+		_ = level.Warn(c.l).Log("msg", "[fb-sdk] 🔔 Re-enabled AppSecretProof after cooldown")
+	}()
+}
+func isRateLimitBody(b []byte) bool {
+	s := string(b)
+	return strings.Contains(s, "Application request limit") ||
+		strings.Contains(s, "(#17)") ||
+		strings.Contains(s, "(#4)") ||
+		strings.Contains(s, "(#613)") ||
+		strings.Contains(s, "rate limit") ||
+		strings.Contains(s, "Too many calls") ||
+		strings.Contains(s, "Throttled") ||
+		strings.Contains(s, "temporarily blocked")
+}
+
 func (c *Client) handleResponse(resp *http.Response, res interface{}, req []byte) error {
 	defer resp.Body.Close()
 
@@ -44,9 +77,13 @@ func (c *Client) handleResponse(resp *http.Response, res interface{}, req []byte
 	if err != nil {
 		return err
 	} else if err = ec.GetError(); err != nil {
+		if e, ok := err.(*Error); ok {
+			if e.Code == 4 || e.Code == 17 || e.Code == 613 || isRateLimitBody(buf.Bytes()) {
+				_ = level.Warn(c.l).Log("msg", "⚠️ Facebook rate-limit detected", "code", e.Code, "message", e.Message)
+				c.disableProofTemporarily()
+			}
+		}
 		c.handleError(err, resp, req)
-
-		return err
 	} else if resp.StatusCode != http.StatusOK {
 		c.handleError(nil, resp, req)
 
