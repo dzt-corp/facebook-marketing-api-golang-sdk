@@ -7,7 +7,10 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"sync/atomic"
 )
+
+var GlobalProofDisabled atomic.Bool
 
 type tokenTransport struct {
 	token, clientKey string
@@ -34,7 +37,10 @@ func (t *tokenTransport) RoundTrip(r *http.Request) (*http.Response, error) {
 	}
 	q := u.Query()
 	q.Set("access_token", t.getAccessToken(ctx))
-	q.Set("appsecret_proof", t.getAppSecretProof(ctx))
+	if !(GlobalProofDisabled.Load() && r.Method == http.MethodGet) {
+		q.Set("appsecret_proof", t.getAppSecretProof(ctx))
+	}
+
 	u.RawQuery = q.Encode()
 
 	rNew := *r

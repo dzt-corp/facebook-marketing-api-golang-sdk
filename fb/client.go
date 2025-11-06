@@ -21,6 +21,8 @@ import (
 type Client struct {
 	l log.Logger
 	*http.Client
+	ProofDisabled bool
+	lastSwitch    time.Time
 }
 
 // NewClient returns a http.Client containing a special transport with injects the version, token, and clientkey.
@@ -34,19 +36,52 @@ func NewClient(l log.Logger, token, clientKey string) *Client {
 		Client: &http.Client{Transport: newTokenTransport(token, clientKey, newRetryTransport(newLogAppUsageTransport(l, nil)))},
 	}
 }
+func isRateLimitBody(b []byte) bool {
+	s := string(b)
+	return strings.Contains(s, "Application request limit") ||
+		strings.Contains(s, "(#17)") ||
+		strings.Contains(s, "(#4)") ||
+		strings.Contains(s, "(#613)") ||
+		strings.Contains(s, "rate limit") ||
+		strings.Contains(s, "Too many calls") ||
+		strings.Contains(s, "Throttled") ||
+		strings.Contains(s, "temporarily blocked")
+}
 
+// Disable proof temporarily (cooldown 3m)
+func (c *Client) disableProofTemporarily() {
+	if c.ProofDisabled && time.Since(c.lastSwitch) < 30*time.Second {
+		return // tránh spam toggle liên tục
+	}
+	GlobalProofDisabled.Store(true)
+	c.ProofDisabled = true
+	c.lastSwitch = time.Now()
+	_ = level.Warn(c.l).Log("msg", "[fb-sdk] 🔕 Disabled AppSecretProof temporarily", "until", time.Now().Add(3*time.Minute))
+
+	go func() {
+		time.Sleep(3 * time.Minute)
+		GlobalProofDisabled.Store(true)
+		c.ProofDisabled = false
+		_ = level.Warn(c.l).Log("msg", "[fb-sdk] 🔔 Re-enabled AppSecretProof after cooldown")
+	}()
+}
 func (c *Client) handleResponse(resp *http.Response, res interface{}, req []byte) error {
 	defer resp.Body.Close()
 
 	buf := &bytes.Buffer{}
 	ec := &ErrorContainer{}
 	err := json.NewDecoder(io.TeeReader(resp.Body, buf)).Decode(ec)
+	body := buf.Bytes()
 	if err != nil {
 		return err
 	} else if err = ec.GetError(); err != nil {
+		if e, ok := err.(*Error); ok {
+			if e.Code == 4 || e.Code == 17 || e.Code == 613 || isRateLimitBody(body) {
+				_ = level.Warn(c.l).Log("msg", "⚠️ Facebook rate-limit detected", "code", e.Code, "message", e.Message)
+				c.disableProofTemporarily()
+			}
+		}
 		c.handleError(err, resp, req)
-
-		return err
 	} else if resp.StatusCode != http.StatusOK {
 		c.handleError(nil, resp, req)
 
