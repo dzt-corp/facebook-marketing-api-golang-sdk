@@ -20,7 +20,7 @@ func (as *AdService) Get(ctx context.Context, id string) (*Ad, error) {
 	res := &Ad{}
 	err := as.c.GetJSON(ctx, fb.NewRoute(Version, "/%s", id).Fields("id", "creative", "name", "account_id", "adset_id", "created_time", "status",
 		"adset{id,campaign_id,daily_budget,name,start_time,end_time,created_time,status,bid_strategy,targeting{age_min,age_max,publisher_platforms,geo_locations,genders,custom_audiences,excluded_custom_audiences,flexible_spec,exclusions}}",
-		"adcreatives{id,title,object_story_spec}").Limit(1000).String(), res)
+		"adcreatives{id,title,object_story_spec,effective_object_story_id}").Limit(1000).String(), res)
 	if err != nil {
 		if fb.IsNotFound(err) {
 			return nil, nil
