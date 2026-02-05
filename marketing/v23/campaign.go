@@ -141,10 +141,11 @@ var campaignFieldsShort = []string{
 	"stop_time",
 	"buying_type",
 	"can_use_spend_cap",
-	"updated_time",
 	"daily_budget",
 	"lifetime_budget",
 	"bid_strategy",
+	"updated_time",
+	"created_time",
 }
 
 // Campaign from https://developers.facebook.com/docs/marketing-api/reference/ad-campaign-group
