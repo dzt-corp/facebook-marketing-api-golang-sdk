@@ -87,7 +87,7 @@ func (ir *BatchInsightsRequest) Download(ctx context.Context) ([]Insight, error)
 
 	form := url.Values{}
 	form.Set("batch", string(batchJSON))
-	fmt.Println(string(batchJSON))
+	// fmt.Println(string(batchJSON))
 	var batchRes []fb.BatchResponse
 
 	err = ir.c.BatchForm(ctx, endPoint, form, &batchRes)
