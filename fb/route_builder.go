@@ -340,9 +340,86 @@ func (rb *RouteBuilder) String() string {
 	}).String()
 }
 
+func (rb *RouteBuilder) Path() string {
+	if rb.err != nil {
+		return "err: " + rb.err.Error()
+	}
+
+	return rb.version + rb.path + "?" + rb.v.Encode()
+}
+
 // Filter is used for filtering lists.
 type Filter struct {
 	Field    string      `json:"field"`
 	Operator string      `json:"operator"`
 	Value    interface{} `json:"value"`
+}
+
+type BatchRoute struct {
+	Method string `json:"method"`
+	*RouteBuilder
+}
+
+type BatchRoutes []*BatchRoute
+
+type BatchRequest struct {
+	Method      string `json:"method"`
+	RelativeURL string `json:"relative_url"`
+}
+
+type BatchResponse struct {
+	Code int    `json:"code"`
+	Body string `json:"body"`
+}
+
+func (batch BatchRoutes) ToRequest() []*BatchRequest {
+	var result []*BatchRequest
+	for _, route := range batch {
+		if route == nil || route.RouteBuilder == nil {
+			continue
+		}
+
+		result = append(result, &BatchRequest{Method: route.Method, RelativeURL: route.RouteBuilder.Path()})
+	}
+	return result
+}
+
+func (rb *BatchRoute) ToRequest() *BatchRequest {
+	return &BatchRequest{Method: rb.Method, RelativeURL: rb.RouteBuilder.Path()}
+}
+
+// Breakdowns sets the breakdowns array param.
+func (rb BatchRoutes) Breakdowns(s ...string) BatchRoutes {
+	for _, r := range rb {
+		r.Breakdowns(s...)
+	}
+
+	return rb
+}
+
+// Level sets the location_types level param.
+func (rb BatchRoutes) Level(s string) BatchRoutes {
+	for _, r := range rb {
+		r.Level(s)
+	}
+
+	return rb
+}
+
+// Fields sets the fields query param.
+func (rb BatchRoutes) Fields(f ...string) BatchRoutes {
+	for _, r := range rb {
+		r.Fields(f...)
+	}
+
+	return rb
+}
+
+// DatePreset sets date_preset param and deletes the time_range one.
+func (rb BatchRoutes) DatePreset(s string) BatchRoutes {
+	for _, r := range rb {
+		r.DatePreset(s)
+	}
+
+	return rb
 }

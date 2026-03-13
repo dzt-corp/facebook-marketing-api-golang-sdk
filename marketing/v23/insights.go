@@ -2,8 +2,10 @@ package v23
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
+	"net/url"
 	"strconv"
 	"strings"
 	"time"
@@ -56,6 +58,64 @@ func (is *InsightsService) NewReportOfCampaign(campaignID string) *InsightsReque
 type InsightsRequest struct {
 	*InsightsService
 	*fb.RouteBuilder
+}
+
+func (is *InsightsService) NewBatchRequest(ctx context.Context, listCampaignID []string) *BatchInsightsRequest {
+	batch := make(fb.BatchRoutes, 0, len(listCampaignID))
+	for _, campaignID := range listCampaignID {
+		batch = append(batch, &fb.BatchRoute{Method: "GET", RouteBuilder: fb.NewRoute(Version, "/%s/insights", campaignID)})
+	}
+	return &BatchInsightsRequest{
+		InsightsService: is, BatchRoutes: &batch,
+	}
+}
+
+type BatchInsightsRequest struct {
+	*InsightsService
+	*fb.BatchRoutes
+}
+
+// Download returns all insights from the request in one slice.
+func (ir *BatchInsightsRequest) Download(ctx context.Context) ([]Insight, error) {
+
+	endPoint := "https://graph.facebook.com"
+
+	batchJSON, err := json.Marshal(ir.BatchRoutes.ToRequest())
+	if err != nil {
+		return nil, err
+	}
+
+	form := url.Values{}
+	form.Set("batch", string(batchJSON))
+	fmt.Println(string(batchJSON))
+	var batchRes []fb.BatchResponse
+
+	err = ir.c.BatchForm(ctx, endPoint, form, &batchRes)
+	if err != nil {
+		return nil, err
+	}
+
+	var insights []Insight
+
+	for _, r := range batchRes {
+
+		if r.Code != 200 {
+			continue
+		}
+
+		var resp struct {
+			Data []Insight `json:"data"`
+		}
+
+		err := json.Unmarshal([]byte(r.Body), &resp)
+		if err != nil {
+			return nil, err
+		}
+
+		insights = append(insights, resp.Data...)
+	}
+
+	return insights, nil
 }
 
 // Download returns all insights from the request in one slice.

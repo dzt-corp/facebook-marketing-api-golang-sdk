@@ -380,3 +380,35 @@ func (c *Client) UploadFile(ctx context.Context, url, name string, r io.Reader, 
 		return c.handleResponse(resp, res, nil)
 	}, backoff.WithContext(bo, ctx))
 }
+
+func (c *Client) BatchForm(ctx context.Context, endpointURL string, formBody url.Values, res interface{}) error {
+
+	body := strings.NewReader(formBody.Encode())
+
+	req, err := http.NewRequest(http.MethodPost, endpointURL, body)
+	if err != nil {
+		return fmt.Errorf("cannot prepare request: %w", err)
+	}
+
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+	resp, err := c.Client.Do(req.WithContext(ctx))
+	if err != nil {
+		return fmt.Errorf("cannot execute request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	debugBuf, _ := io.ReadAll(resp.Body)
+	// fmt.Println("debugBuf : ", string(debugBuf))
+	if resp.StatusCode >= 400 {
+		return fmt.Errorf("facebook api error: %s", string(debugBuf))
+	}
+
+	if res != nil {
+		if err := json.Unmarshal(debugBuf, res); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
