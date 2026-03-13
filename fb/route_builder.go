@@ -423,3 +423,11 @@ func (rb BatchRoutes) DatePreset(s string) BatchRoutes {
 
 	return rb
 }
+
+func (rb BatchRoutes) TimeRange(minDate, maxDate time.Time) BatchRoutes {
+	for _, r := range rb {
+		r.TimeRange(minDate, maxDate)
+	}
+
+	return rb
+}
