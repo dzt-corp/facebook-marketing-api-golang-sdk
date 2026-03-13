@@ -431,3 +431,11 @@ func (rb BatchRoutes) TimeRange(minDate, maxDate time.Time) BatchRoutes {
 
 	return rb
 }
+
+func (rb BatchRoutes) ActionAttributionWindows(s ...string) BatchRoutes {
+	for _, r := range rb {
+		r.ActionAttributionWindows(s...)
+	}
+
+	return rb
+}
