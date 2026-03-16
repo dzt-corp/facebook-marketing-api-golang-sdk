@@ -439,3 +439,12 @@ func (rb BatchRoutes) ActionAttributionWindows(s ...string) BatchRoutes {
 
 	return rb
 }
+
+// Limit sets the limit param.
+func (rb BatchRoutes) Limit(limit int) BatchRoutes {
+	for _, r := range rb {
+		r.Limit(limit)
+	}
+
+	return rb
+}

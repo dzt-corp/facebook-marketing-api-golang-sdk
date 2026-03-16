@@ -77,7 +77,7 @@ type BatchInsightsRequest struct {
 
 // Download returns all insights from the request in one slice.
 func (ir *BatchInsightsRequest) Download(ctx context.Context) ([]Insight, error) {
-
+	var insights []Insight
 	endPoint := "https://graph.facebook.com"
 
 	batchJSON, err := json.Marshal(ir.BatchRoutes.ToRequest())
@@ -88,16 +88,15 @@ func (ir *BatchInsightsRequest) Download(ctx context.Context) ([]Insight, error)
 	form := url.Values{}
 	form.Set("batch", string(batchJSON))
 	// fmt.Println(string(batchJSON))
-	var batchRes []fb.BatchResponse
-
-	err = ir.c.BatchForm(ctx, endPoint, form, &batchRes)
+	var batchResp []fb.BatchResponse
+	err = ir.c.BatchForm(ctx, endPoint, form, &batchResp)
 	if err != nil {
 		return nil, err
 	}
 
-	var insights []Insight
+	var nextUrls []string
 
-	for _, r := range batchRes {
+	for _, r := range batchResp {
 
 		if r.Code != 200 {
 			continue
@@ -105,6 +104,7 @@ func (ir *BatchInsightsRequest) Download(ctx context.Context) ([]Insight, error)
 
 		var resp struct {
 			Data []Insight `json:"data"`
+			fb.Paging
 		}
 
 		err := json.Unmarshal([]byte(r.Body), &resp)
@@ -113,6 +113,23 @@ func (ir *BatchInsightsRequest) Download(ctx context.Context) ([]Insight, error)
 		}
 
 		insights = append(insights, resp.Data...)
+		if resp.Paging.Paging.Next != "" {
+			nextUrls = append(nextUrls, resp.Paging.Paging.Next)
+		}
+	}
+
+	// fetch paging
+	for _, next := range nextUrls {
+		if next == "" {
+			continue
+		}
+		var remainInsights []Insight
+		if err := ir.c.GetList(ctx, next, &remainInsights); err != nil {
+			return nil, err
+		}
+		if len(remainInsights) != 0 {
+			insights = append(insights, remainInsights...)
+		}
 	}
 
 	return insights, nil

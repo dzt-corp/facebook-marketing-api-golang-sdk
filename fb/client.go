@@ -399,13 +399,17 @@ func (c *Client) BatchForm(ctx context.Context, endpointURL string, formBody url
 	defer resp.Body.Close()
 
 	debugBuf, _ := io.ReadAll(resp.Body)
-	// fmt.Println("debugBuf : ", string(debugBuf))
+	//fmt.Println("debugBuf : ", string(debugBuf))
+	// err = os.WriteFile("response.json", debugBuf, 0644)
+	// if err != nil {
+	// 	return err
+	// }
 	if resp.StatusCode >= 400 {
 		return fmt.Errorf("facebook api error: %s", string(debugBuf))
 	}
 
 	if res != nil {
-		if err := json.Unmarshal(debugBuf, res); err != nil {
+		if err := json.Unmarshal(debugBuf, &res); err != nil {
 			return err
 		}
 	}
