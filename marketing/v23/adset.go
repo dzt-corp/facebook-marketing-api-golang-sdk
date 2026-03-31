@@ -235,9 +235,10 @@ type Targeting struct {
 	AudienceNetworkPositions []string `json:"audience_network_positions,omitempty"`
 	MessengerPositions       []string `json:"messenger_positions,omitempty"`
 
-	AgeMin  uint64 `json:"age_min,omitempty"`
-	AgeMax  uint64 `json:"age_max,omitempty"`
-	Genders []int  `json:"genders,omitempty"`
+	AgeMin   uint64   `json:"age_min,omitempty"`
+	AgeMax   *uint64  `json:"age_max,omitempty"`
+	AgeRange []uint64 `json:"age_range,omitempty"`
+	Genders  []int    `json:"genders,omitempty"`
 
 	AppInstallState string `json:"app_install_state,omitempty"`
 
