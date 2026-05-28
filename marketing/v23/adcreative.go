@@ -329,22 +329,81 @@ type StandardEnhancements struct {
 // CreativeFeaturesSpec represents Advantage+ Creative feature enrollments.
 // Refer : https://developers.facebook.com/docs/marketing-api/creative/advantage-creative/get-started#features
 type CreativeFeaturesSpec struct {
-	InlineComment           *StandardEnhancements `json:"inline_comment,omitempty"`
-	ImageTemplates          *StandardEnhancements `json:"image_templates,omitempty"`
-	ImageTouchups           *StandardEnhancements `json:"image_touchups,omitempty"`
-	VideoAutoCrop           *StandardEnhancements `json:"video_auto_crop,omitempty"`
-	ImageBrightnessContrast *StandardEnhancements `json:"image_brightness_and_contrast,omitempty"`
-	EnhanceCTA              *StandardEnhancements `json:"enhance_cta,omitempty"`
+	// Core AI
+	AdvantagePlusCreative *StandardEnhancements `json:"advantage_plus_creative,omitempty"`
+	BizAI                 *StandardEnhancements `json:"biz_ai,omitempty"`
+	DHAOptimization       *StandardEnhancements `json:"dha_optimization,omitempty"`
+
+	// Placement
+	AdaptToPlacement    *StandardEnhancements `json:"adapt_to_placement,omitempty"`
+	PacRecomposition    *StandardEnhancements `json:"pac_recomposition,omitempty"`
+	PacRelaxation       *StandardEnhancements `json:"pac_relaxation,omitempty"`
+	MediaOrder          *StandardEnhancements `json:"media_order,omitempty"`
+	MediaTypeAutomation *StandardEnhancements `json:"media_type_automation,omitempty"`
+
+	// Text / CTA
 	TextOptimizations       *StandardEnhancements `json:"text_optimizations,omitempty"`
-	ImageBackgroundGen      *StandardEnhancements `json:"image_background_gen,omitempty"`
-	ImageUncrop             *StandardEnhancements `json:"image_uncrop,omitempty"`
-	AdaptToPlacement        *StandardEnhancements `json:"adapt_to_placement,omitempty"`
-	MediaTypeAutomation     *StandardEnhancements `json:"media_type_automation,omitempty"`
-	ProductExtensions       *StandardEnhancements `json:"product_extensions,omitempty"`
 	DescriptionAutomation   *StandardEnhancements `json:"description_automation,omitempty"`
-	AddTextOverlay          *StandardEnhancements `json:"add_text_overlay,omitempty"`
-	CreativeStickers        *StandardEnhancements `json:"creative_stickers,omitempty"`
+	GenerateCTA             *StandardEnhancements `json:"generate_cta,omitempty"`
+	EnhanceCTA              *StandardEnhancements `json:"enhance_cta,omitempty"`
+	FeedCaptionOptimization *StandardEnhancements `json:"feed_caption_optimization,omitempty"`
 	TextTranslation         *StandardEnhancements `json:"text_translation,omitempty"`
+
+	// Website
+	ShowSummary           *StandardEnhancements `json:"show_summary,omitempty"`
+	ShowDestinationBlurbs *StandardEnhancements `json:"show_destination_blurbs,omitempty"`
+	SiteExtensions        *StandardEnhancements `json:"site_extensions,omitempty"`
+	LocalStoreExtension   *StandardEnhancements `json:"local_store_extension,omitempty"`
+
+	// Catalog
+	StandardEnhancementsCatalog *StandardEnhancements `json:"standard_enhancements_catalog,omitempty"`
+	ProductExtensions           *StandardEnhancements `json:"product_extensions,omitempty"`
+	ProductBrowsing             *StandardEnhancements `json:"product_browsing,omitempty"`
+	ProductMetadataAutomation   *StandardEnhancements `json:"product_metadata_automation,omitempty"`
+	CatalogFeedTag              *StandardEnhancements `json:"catalog_feed_tag,omitempty"`
+	DynamicPartnerContent       *StandardEnhancements `json:"dynamic_partner_content,omitempty"`
+	HidePrice                   *StandardEnhancements `json:"hide_price,omitempty"`
+
+	// Image
+	ImageAutoCrop              *StandardEnhancements `json:"image_auto_crop,omitempty"`
+	ImageUncrop                *StandardEnhancements `json:"image_uncrop,omitempty"`
+	ImageBackgroundGen         *StandardEnhancements `json:"image_background_gen,omitempty"`
+	ImageTouchups              *StandardEnhancements `json:"image_touchups,omitempty"`
+	ImageEnhancement           *StandardEnhancements `json:"image_enhancement,omitempty"`
+	ImageBrightnessAndContrast *StandardEnhancements `json:"image_brightness_and_contrast,omitempty"`
+	ImageAnimation             *StandardEnhancements `json:"image_animation,omitempty"`
+	ImageTemplates             *StandardEnhancements `json:"image_templates,omitempty"`
+	ImageTextTranslation       *StandardEnhancements `json:"image_text_translation,omitempty"`
+	ReplaceMediaText           *StandardEnhancements `json:"replace_media_text,omitempty"`
+	AddTextOverlay             *StandardEnhancements `json:"add_text_overlay,omitempty"`
+	CreativeStickers           *StandardEnhancements `json:"creative_stickers,omitempty"`
+
+	// Video
+	VideoAutoCrop               *StandardEnhancements `json:"video_auto_crop,omitempty"`
+	VideoUncrop                 *StandardEnhancements `json:"video_uncrop,omitempty"`
+	VideoFiltering              *StandardEnhancements `json:"video_filtering,omitempty"`
+	VideoHighlight              *StandardEnhancements `json:"video_highlight,omitempty"`
+	VideoHighlights             *StandardEnhancements `json:"video_highlights,omitempty"`
+	VideoToImage                *StandardEnhancements `json:"video_to_image,omitempty"`
+	TranslateVoiceover          *StandardEnhancements `json:"translate_voiceover,omitempty"`
+	IGVideoNativeSubtitle       *StandardEnhancements `json:"ig_video_native_subtitle,omitempty"`
+	CarouselToVideo             *StandardEnhancements `json:"carousel_to_video,omitempty"`
+	MultiPhotoToVideo           *StandardEnhancements `json:"multi_photo_to_video,omitempty"`
+	MediaLiquidityAnimatedImage *StandardEnhancements `json:"media_liquidity_animated_image,omitempty"`
+
+	// Social
+	InlineComment         *StandardEnhancements `json:"inline_comment,omitempty"`
+	ProfileCard           *StandardEnhancements `json:"profile_card,omitempty"`
+	EnableNCSTestimonials *StandardEnhancements `json:"enable_ncs_testimonials,omitempty"`
+	IGGladosFeed          *StandardEnhancements `json:"ig_glados_feed,omitempty"`
+
+	// Misc
+	AdsWithBenefits       *StandardEnhancements `json:"ads_with_benefits,omitempty"`
+	AppHighlights         *StandardEnhancements `json:"app_highlights,omitempty"`
+	Audio                 *StandardEnhancements `json:"audio,omitempty"`
+	CVTransformation      *StandardEnhancements `json:"cv_transformation,omitempty"`
+	RevealDetailsOverTime *StandardEnhancements `json:"reveal_details_over_time,omitempty"`
+	WAMMImageFiltering    *StandardEnhancements `json:"wa_mm_image_filtering,omitempty"`
 }
 
 // InteractiveComponentsSpec is mainly used for Video Poll Ads.
