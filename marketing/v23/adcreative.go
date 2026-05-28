@@ -269,7 +269,7 @@ type AdCreative struct {
 	// Ad Labels that are associated with this creative
 	Adlabels []json.RawMessage `json:"adlabels,omitempty"`
 	//enable_standard_enhancements
-	EnableStandardEnhancements bool `json:"enable_standard_enhancements,omitempty"`
+	EnableStandardEnhancements bool `json:"enable_standard_enhancements"`
 	// DegreesOfFreedomSpec Specifies the types of transformations that are enabled for the given creative. For more information, see Ad Creative Degrees Of Freedom Spec, Reference.
 	DegreesOfFreedomSpec *DegreesOfFreedomSpec `json:"degrees_of_freedom_spec,omitempty"`
 }
