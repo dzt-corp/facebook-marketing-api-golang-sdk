@@ -190,24 +190,21 @@ func (c *Client) ReadList(ctx context.Context, url string, res chan<- json.RawMe
 func (c *Client) PostJSON(ctx context.Context, url string, req, res interface{}) error {
 	var r io.Reader
 	if req != nil {
-		b := &bytes.Buffer{}
-		err := json.NewEncoder(b).Encode(req)
+		body, err := json.Marshal(req)
 		if err != nil {
 			return err
 		}
-		r = b
-	}
 
-	var debugBuf *bytes.Buffer
-	if r != nil {
-		debugBuf = &bytes.Buffer{}
-		r = io.TeeReader(r, debugBuf)
+		// fmt.Printf("POST %s\nBody: %s\n", url, string(body))
+
+		r = bytes.NewReader(body)
 	}
 
 	request, err := http.NewRequest(http.MethodPost, url, r)
 	if err != nil {
 		return err
 	}
+
 	request.Header.Set("Content-Type", "application/json")
 
 	resp, err := c.Client.Do(request.WithContext(ctx))
@@ -215,12 +212,7 @@ func (c *Client) PostJSON(ctx context.Context, url string, req, res interface{})
 		return err
 	}
 
-	var b []byte
-	if debugBuf != nil {
-		b = debugBuf.Bytes()
-	}
-
-	return c.handleResponse(resp, res, b)
+	return c.handleResponse(resp, res, nil)
 }
 
 // Send a Post request encoded as a form.
