@@ -3,6 +3,7 @@ package fb
 import (
 	"encoding/json"
 	"fmt"
+	"strings"
 )
 
 // ErrorContainer is a convenient type for embedding in other structs.
@@ -121,4 +122,25 @@ type SummaryContainer struct {
 	Summary struct {
 		TotalCount uint64 `json:"total_count"`
 	} `json:"summary"`
+}
+
+// IsRateLimitError checks whether err is a Facebook rate-limit / quota error
+// (error codes 4, 17, 613 or known rate-limit message patterns).
+func IsRateLimitError(err error) bool {
+	if err == nil {
+		return false
+	}
+	e, ok := err.(*Error)
+	if !ok {
+		// Fallback: check error message string for rate-limit keywords
+		msg := err.Error()
+		return strings.Contains(msg, "rate limit") ||
+			strings.Contains(msg, "Too many calls") ||
+			strings.Contains(msg, "Throttled") ||
+			strings.Contains(msg, "temporarily blocked") ||
+			strings.Contains(msg, "(#17)") ||
+			strings.Contains(msg, "(#4)") ||
+			strings.Contains(msg, "(#613)")
+	}
+	return e.Code == 4 || e.Code == 17 || e.Code == 613
 }

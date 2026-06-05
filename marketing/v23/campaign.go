@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
 
 	"github.com/dzt-corp/facebook-marketing-api-golang-sdk/fb"
 )
@@ -53,23 +54,49 @@ func (cs *CampaignService) Create(ctx context.Context, c Campaign) (string, erro
 	return res.ID, nil
 }
 
-// Update updates an campaign.
+// Update updates a campaign.
+// Retries automatically on Facebook quota / rate-limit errors (codes 4, 17, 613).
 func (cs *CampaignService) Update(ctx context.Context, fbCampaignID string, data interface{}) error {
 	if fbCampaignID == "" {
 		return errors.New("cannot update a campaign without id")
 	}
 
-	res := &fb.MinimalResponse{}
-	err := cs.c.PostJSON(ctx, fb.NewRoute(Version, "/%s", fbCampaignID).String(), data, res)
-	if err != nil {
-		return err
-	} else if err = res.GetError(); err != nil {
-		return err
-	} else if !res.Success && res.ID == "" {
-		return fmt.Errorf("updating the campaign failed")
+	const maxRetries = 3
+	baseDelay := 30 * time.Second
+	var lastErr error
+
+	for attempt := 0; attempt <= maxRetries; attempt++ {
+		if attempt > 0 {
+			delay := baseDelay * time.Duration(1<<(attempt-1)) // 30s, 60s, 120s
+			select {
+			case <-ctx.Done():
+				return fmt.Errorf("update campaign %s cancelled: %w", fbCampaignID, ctx.Err())
+			case <-time.After(delay):
+			}
+		}
+
+		res := &fb.MinimalResponse{}
+		err := cs.c.PostJSON(ctx, fb.NewRoute(Version, "/%s", fbCampaignID).String(), data, res)
+		if err != nil {
+			if fb.IsRateLimitError(err) {
+				lastErr = err
+				continue
+			}
+			return err
+		} else if err = res.GetError(); err != nil {
+			if fb.IsRateLimitError(err) {
+				lastErr = err
+				continue
+			}
+			return err
+		} else if !res.Success && res.ID == "" {
+			return fmt.Errorf("updating the campaign failed")
+		}
+
+		return nil
 	}
 
-	return nil
+	return fmt.Errorf("update campaign %s failed after %d retries (rate limited): %w", fbCampaignID, maxRetries, lastErr)
 }
 
 // List creates a new CampaignListCall.

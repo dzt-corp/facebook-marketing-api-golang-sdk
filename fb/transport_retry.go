@@ -36,6 +36,11 @@ func (t *retryTransport) RoundTrip(r *http.Request) (*http.Response, error) {
 
 		if e != nil {
 			return e
+		} else if resp.StatusCode == 429 {
+			resp.Body.Close()
+			// Rate-limited: use longer initial backoff
+			bo.InitialInterval = 30 * time.Second
+			return fmt.Errorf("rate limited (429) from facebook, attempt %d", attempt)
 		} else if resp.StatusCode >= 500 {
 			resp.Body.Close()
 
