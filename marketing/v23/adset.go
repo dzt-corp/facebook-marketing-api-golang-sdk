@@ -207,6 +207,11 @@ type Adset struct {
 	DSABeneficiary              string                 `json:"dsa_beneficiary,omitempty"`
 	DSAPayor                    string                 `json:"dsa_payor,omitempty"`
 	RegionalRegulatedCategories []string               `json:"regional_regulated_categories,omitempty"`
+	BidConstraints              *BidConstraints        `json:"bid_constraints,omitempty"`
+}
+
+type BidConstraints struct {
+	ROASAverageFloor int64 `json:"roas_average_floor,omitempty"`
 }
 
 // FrequencyControlSpec controls the frequency of an adset.
