@@ -211,7 +211,7 @@ type Adset struct {
 }
 
 type BidConstraints struct {
-	ROASAverageFloor int64 `json:"roas_average_floor,omitempty"`
+	ROASAverageFloor float64 `json:"roas_average_floor,omitempty"`
 }
 
 // FrequencyControlSpec controls the frequency of an adset.
