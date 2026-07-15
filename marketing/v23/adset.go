@@ -243,7 +243,7 @@ type Targeting struct {
 	MessengerPositions       []string `json:"messenger_positions,omitempty"`
 
 	AgeMin   uint64   `json:"age_min,omitempty"`
-	AgeMax   *uint64  `json:"age_max,omitempty"`
+	AgeMax   uint64   `json:"age_max,omitempty"`
 	AgeRange []uint64 `json:"age_range,omitempty"`
 	Genders  []int    `json:"genders,omitempty"`
 
