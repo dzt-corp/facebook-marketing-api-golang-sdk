@@ -177,6 +177,7 @@ var Adcreativefields = []string{
 	"title",
 	"video_id",
 	"degrees_of_freedom_spec",
+	"url_tags",
 }
 
 // AdCreative https://developers.facebook.com/docs/marketing-api/reference/ad-creative
