@@ -18,7 +18,7 @@ type AdService struct {
 // Get returns a single ad.
 func (as *AdService) Get(ctx context.Context, id string) (*Ad, error) {
 	res := &Ad{}
-	err := as.c.GetJSON(ctx, fb.NewRoute(Version, "/%s", id).Fields("id", "creative", "name", "account_id", "adset_id", "created_time", "status",
+	err := as.c.GetJSON(ctx, fb.NewRoute(Version, "/%s", id).Fields("id", "creative", "name", "account_id", "adset_id", "created_time", "status", "effective_status",
 		"adset{id,campaign_id,attribution_spec,daily_budget,name,start_time,end_time,created_time,status,bid_strategy,bid_amount,bid_constraints,targeting{age_min,age_max,publisher_platforms,geo_locations,genders,custom_audiences,excluded_custom_audiences,flexible_spec,exclusions}}",
 		"adcreatives{id,title,object_story_spec,instagram_user_id,effective_object_story_id, url_tags}").Limit(1000).String(), res)
 	if err != nil {
@@ -132,16 +132,17 @@ func (as *AdListCall) Read(ctx context.Context, c chan<- Ad) error {
 
 // Ad represents a Facebook Ad.
 type Ad struct {
-	AccountID     string                  `json:"account_id,omitempty"`
-	ID            string                  `json:"id,omitempty"`
-	Name          string                  `json:"name,omitempty"`
-	Status        string                  `json:"status,omitempty"`
-	AdsetID       string                  `json:"adset_id,omitempty"`
-	Creative      *AdCreative             `json:"creative,omitempty"`
-	Adset         *Adset                  `json:"adset,omitempty"`
-	CreatedTime   fb.Time                 `json:"created_time,omitempty"`
-	TrackingSpecs []ConversionActionQuery `json:"tracking_specs,omitempty"`
-	Adcreatives   *struct {
+	AccountID       string                  `json:"account_id,omitempty"`
+	ID              string                  `json:"id,omitempty"`
+	Name            string                  `json:"name,omitempty"`
+	Status          string                  `json:"status,omitempty"`
+	EffectiveStatus string                  `json:"effective_status,omitempty"`
+	AdsetID         string                  `json:"adset_id,omitempty"`
+	Creative        *AdCreative             `json:"creative,omitempty"`
+	Adset           *Adset                  `json:"adset,omitempty"`
+	CreatedTime     fb.Time                 `json:"created_time,omitempty"`
+	TrackingSpecs   []ConversionActionQuery `json:"tracking_specs,omitempty"`
+	Adcreatives     *struct {
 		Data []AdCreative `json:"data,omitempty"`
 	} `json:"adcreatives,omitempty"`
 }
